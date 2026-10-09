@@ -68,10 +68,13 @@ main.container { padding: 1rem 0 2rem; }
   border: 1px solid #ccc;
   background: #fff;
 }
-.map-placeholder img {
+.map-placeholder img,
+.map-placeholder iframe {
   display: block;
+  width: 100%;
   max-width: 100%;
-  height: auto;
+  height: 320px;
+  border: 0;
 }
 .station-list {
   list-style: none;
