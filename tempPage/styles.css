@@ -1,0 +1,106 @@
+/* Minimal structural styles only — Lab 4 */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.45;
+  color: #111;
+  background: #f7f7f7;
+}
+.container {
+  width: min(1100px, 100% - 2rem);
+  margin-inline: auto;
+}
+.site-header {
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  padding: 0.75rem 0;
+}
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+}
+.logo-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #333;
+}
+.main-nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+main.container { padding: 1rem 0 2rem; }
+.intro { margin-bottom: 1.25rem; }
+.filters { margin-bottom: 1.25rem; }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+@media (max-width: 768px) {
+  .content-grid { grid-template-columns: 1fr; }
+}
+.map-placeholder {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+.map-placeholder img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.station-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.station-card {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 0.75rem;
+}
+.station-card h3 { margin: 0 0 0.35rem; }
+.aside-block,
+.details-block,
+.about-block {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+.site-footer {
+  border-top: 1px solid #ddd;
+  background: #fff;
+  padding: 1rem 0;
+  font-size: 0.95rem;
+}
+button, select {
+  font: inherit;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FuelSearch66 — главная</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html" aria-label="FuelSearch66 — на главную">
+        <span class="logo-mark" aria-hidden="true">66</span>
+        <span class="logo-text">FuelSearch66</span>
+      </a>
+      <nav class="main-nav" aria-label="Основная навигация">
+        <ul>
+          <li><a href="index.html" aria-current="page">Карта</a></li>
+          <li><a href="#favorites-preview">Избранное</a></li>
+          <li><a href="#about">О проекте</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="intro" aria-labelledby="intro-title">
+      <h1 id="intro-title">АЗС Свердловской области</h1>
+      <p>
+        Найдите заправку с нужной маркой топлива, посмотрите свежие отметки о наличии
+        и сохраните станцию в избранное.
+      </p>
+    </section>
+
+    <section class="filters" aria-labelledby="filters-title">
+      <h2 id="filters-title">Фильтр по марке топлива</h2>
+      <form action="#" method="get">
+        <fieldset>
+          <legend>Выберите марку</legend>
+          <div class="chip-row">
+            <label><input type="radio" name="fuel" value="all" checked /> Все</label>
+            <label><input type="radio" name="fuel" value="92" /> АИ-92</label>
+            <label><input type="radio" name="fuel" value="95" /> АИ-95</label>
+            <label><input type="radio" name="fuel" value="100" /> АИ-100</label>
+            <label><input type="radio" name="fuel" value="DT" /> ДТ</label>
+          </div>
+        </fieldset>
+        <button type="submit">Применить фильтр</button>
+      </form>
+    </section>
+
+    <div class="content-grid">
+      <section class="map-section" aria-labelledby="map-title">
+        <h2 id="map-title">Карта</h2>
+        <figure class="map-placeholder">
+          <img
+            src="https://tile.openstreetmap.org/6/39/20.png"
+            width="256"
+            height="256"
+            alt="Фрагмент карты OpenStreetMap (заглушка области)"
+          />
+          <figcaption>Область карты АЗС (структура страницы, без интерактивного Leaflet).</figcaption>
+        </figure>
+      </section>
+
+      <section class="list-section" aria-labelledby="list-title">
+        <h2 id="list-title">Список АЗС</h2>
+        <ul class="station-list">
+          <li>
+            <article class="station-card">
+              <h3>Газпромнефть</h3>
+              <p>ул. Малышева, 36, Екатеринбург</p>
+              <p><span class="status">есть · АИ-95</span></p>
+              <p><a href="#station-details">Открыть карточку</a></p>
+            </article>
+          </li>
+          <li>
+            <article class="station-card">
+              <h3>Лукойл</h3>
+              <p>пр. Космонавтов, 14, Екатеринбург</p>
+              <p><span class="status">мало · АИ-92</span></p>
+              <p><a href="#station-details">Открыть карточку</a></p>
+            </article>
+          </li>
+          <li>
+            <article class="station-card">
+              <h3>Татнефть</h3>
+              <p>ул. 8 Марта, 150, Екатеринбург</p>
+              <p><span class="status">очередь · АИ-95</span></p>
+              <p><a href="#station-details">Открыть карточку</a></p>
+            </article>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <aside id="favorites-preview" class="aside-block" aria-labelledby="fav-title">
+      <h2 id="fav-title">Избранное</h2>
+      <p>Здесь будут станции, сохранённые локально в браузере.</p>
+      <p><a href="#favorites-preview">Перейти к избранному</a></p>
+    </aside>
+
+    <section id="station-details" class="details-block" aria-labelledby="details-title">
+      <h2 id="details-title">Карточка АЗС</h2>
+      <article>
+        <h3>Пример станции</h3>
+        <p>Адрес, координаты и последняя отметка о наличии топлива.</p>
+        <form action="#" method="post">
+          <fieldset>
+            <legend>Добавить отметку</legend>
+            <p>
+              <label for="fuel-type">Марка топлива</label>
+              <select id="fuel-type" name="fuel-type" required>
+                <option value="">Выберите</option>
+                <option value="92">АИ-92</option>
+                <option value="95">АИ-95</option>
+                <option value="100">АИ-100</option>
+                <option value="DT">ДТ</option>
+              </select>
+            </p>
+            <p>
+              <label for="mark-status">Статус</label>
+              <select id="mark-status" name="mark-status" required>
+                <option value="">Выберите</option>
+                <option value="available">есть</option>
+                <option value="low">мало</option>
+                <option value="none">нет</option>
+                <option value="queue">очередь</option>
+              </select>
+            </p>
+            <p>
+              <button type="submit">Сохранить отметку</button>
+              <button type="button">В избранное</button>
+            </p>
+          </fieldset>
+        </form>
+      </article>
+    </section>
+
+    <section id="about" class="about-block" aria-labelledby="about-title">
+      <h2 id="about-title">О проекте</h2>
+      <p>
+        FuelSearch66 — учебный клиентский сервис поиска АЗС по данным OpenStreetMap.
+        Отметки и избранное хранятся в localStorage и не синхронизируются между устройствами.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>FuelSearch66 · Свердловская область · данные OSM</p>
+      <p><a href="#main">Наверх</a></p>
+    </div>
+  </footer>
+</body>
+</html>
