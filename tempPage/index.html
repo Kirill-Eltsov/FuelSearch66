@@ -102,13 +102,13 @@
 
     <section id="station-details" class="details-block" aria-labelledby="details-title">
       <h2 id="details-title">Карточка АЗС</h2>
-      <article>
+      <article class="details-card">
         <h3>Пример станции</h3>
         <p>Адрес, координаты и последняя отметка о наличии топлива.</p>
-        <form action="#" method="post">
+        <form class="mark-form" action="#" method="post">
           <fieldset>
             <legend>Добавить отметку</legend>
-            <p>
+            <p class="form-field">
               <label for="fuel-type">Марка топлива</label>
               <select id="fuel-type" name="fuel-type" required>
                 <option value="">Выберите</option>
@@ -118,7 +118,7 @@
                 <option value="DT">ДТ</option>
               </select>
             </p>
-            <p>
+            <p class="form-field">
               <label for="mark-status">Статус</label>
               <select id="mark-status" name="mark-status" required>
                 <option value="">Выберите</option>
@@ -128,9 +128,9 @@
                 <option value="queue">очередь</option>
               </select>
             </p>
-            <p>
-              <button type="submit">Сохранить отметку</button>
-              <button type="button">В избранное</button>
+            <p class="form-actions">
+              <button class="btn btn-primary" type="submit">Сохранить отметку</button>
+              <button class="btn btn-secondary" type="button">В избранное</button>
             </p>
           </fieldset>
         </form>
