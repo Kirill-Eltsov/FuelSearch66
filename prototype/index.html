@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FuelSearch66 — кликабельный прототип</title>
+  <style>
+    :root {
+      --bg: #0f1720;
+      --panel: #182230;
+      --panel-2: #1e2d3d;
+      --line: #2c3e50;
+      --text: #e8eef5;
+      --muted: #93a4b5;
+      --accent: #2dd4a8;
+      --accent-2: #3b82f6;
+      --warn: #f5c542;
+      --danger: #f07178;
+      --ok: #3ddc97;
+      --card: #223247;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --font: "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: linear-gradient(160deg, #0b121a, #152033 55%, #0f1a24);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app-shell { max-width: 1180px; margin: 0 auto; padding: 20px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #1aa7ff);
+      display: grid; place-items: center; color: #062018; font-weight: 800;
+    }
+    .nav { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav button, .btn, .chip {
+      border: 1px solid var(--line); background: var(--panel);
+      color: var(--text); border-radius: 999px; padding: 8px 14px;
+      cursor: pointer; font: inherit;
+    }
+    .nav button.active, .chip.active {
+      background: rgba(45,212,168,.18); border-color: var(--accent); color: var(--accent);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #1db88f);
+      color: #062018; border: none; font-weight: 700;
+    }
+    .btn-ghost { background: transparent; }
+    .btn-danger { background: rgba(240,113,120,.15); border-color: var(--danger); color: #ffb4b8; }
+    .layout { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; }
+    .panel {
+      background: rgba(24,34,48,.92); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+    }
+    .panel-h {
+      padding: 14px 16px; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    }
+    .panel-b { padding: 16px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .map {
+      min-height: 420px; position: relative;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(45,212,168,.12), transparent 25%),
+        radial-gradient(circle at 70% 60%, rgba(59,130,246,.12), transparent 28%),
+        linear-gradient(#1a2838, #132030);
+    }
+    .map-grid {
+      position: absolute; inset: 0; opacity: .18;
+      background-image:
+        linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+    .pin {
+      position: absolute; width: 18px; height: 18px; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); border: 2px solid #fff; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    }
+    .pin.ok { background: var(--ok); }
+    .pin.low { background: var(--warn); }
+    .pin.none { background: var(--danger); }
+    .pin.queue { background: var(--accent-2); }
+    .pin:hover { outline: 3px solid rgba(255,255,255,.25); }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .list { display: grid; gap: 10px; max-height: 420px; overflow: auto; }
+    .station-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 12px; cursor: pointer; transition: .15s ease;
+    }
+    .station-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .station-card h3 { margin: 0 0 4px; font-size: 15px; }
+    .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line);
+    }
+    .status.ok { color: var(--ok); border-color: rgba(61,220,151,.35); }
+    .status.low { color: var(--warn); border-color: rgba(245,197,66,.35); }
+    .status.none { color: #ffb4b8; border-color: rgba(240,113,120,.35); }
+    .status.queue { color: #9ec1ff; border-color: rgba(59,130,246,.35); }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .flow {
+      display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 8px; margin-bottom: 16px;
+    }
+    .flow-step {
+      background: var(--panel); border: 1px dashed var(--line); border-radius: 12px;
+      padding: 10px; text-align: center; font-size: 12px; color: var(--muted);
+    }
+    .flow-step strong { display: block; color: var(--text); margin-bottom: 4px; font-size: 13px; }
+    .flow-step.current { border-style: solid; border-color: var(--accent); color: var(--accent); }
+    .detail-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+    .form {
+      display: grid; gap: 10px; background: var(--panel-2); border-radius: 12px;
+      padding: 14px; border: 1px solid var(--line);
+    }
+    select, input {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line);
+      background: #101820; color: var(--text); font: inherit;
+    }
+    .toast {
+      position: fixed; right: 20px; bottom: 20px; background: #113226; color: #b8ffe4;
+      border: 1px solid rgba(45,212,168,.4); padding: 12px 16px; border-radius: 12px;
+      display: none; z-index: 20; box-shadow: var(--shadow);
+    }
+    .state-box {
+      min-height: 280px; display: grid; place-items: center; text-align: center; gap: 8px;
+      padding: 24px; color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.15); border-top-color: var(--accent);
+      animation: spin 1s linear infinite; margin: 0 auto 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .mobile-frame {
+      width: 360px; margin: 0 auto; border: 8px solid #0a1018; border-radius: 28px;
+      overflow: hidden; background: var(--bg); box-shadow: var(--shadow);
+    }
+    .mobile-frame .map { min-height: 220px; }
+    .mobile-frame .list { max-height: 240px; }
+    .badge { font-size: 11px; color: var(--accent); border: 1px solid rgba(45,212,168,.35);
+      padding: 2px 8px; border-radius: 999px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) {
+      .layout, .detail-grid, .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">66</div>
+        <div>
+          FuelSearch66
+          <div class="muted">Карта АЗС Свердловской области</div>
+        </div>
+      </div>
+      <div class="nav" id="mainNav">
+        <button type="button" data-screen="flow" class="active">Маршрут</button>
+        <button type="button" data-screen="home">Карта</button>
+        <button type="button" data-screen="details">Карточка АЗС</button>
+        <button type="button" data-screen="favorites">Избранное</button>
+        <button type="button" data-screen="empty">Нет данных</button>
+        <button type="button" data-screen="error">Ошибка</button>
+        <button type="button" data-screen="loading">Загрузка</button>
+        <button type="button" data-screen="mobile">Телефон</button>
+      </div>
+    </div>
+
+    <!-- USER FLOW -->
+    <section class="screen active" id="screen-flow">
+      <div class="panel">
+        <div class="panel-h">
+          <div>
+            <strong>Основной пользовательский путь</strong>
+            <div class="muted">Цель: найти АЗС с нужной маркой топлива и сохранить её</div>
+          </div>
+        </div>
+        <div class="panel-b">
+          <div class="flow">
+            <div class="flow-step current"><strong>1. Открыть</strong>главный экран с картой и списком</div>
+            <div class="flow-step"><strong>2. Фильтр</strong>выбрать марку топлива</div>
+            <div class="flow-step"><strong>3. Выбор</strong>открыть карточку АЗС</div>
+            <div class="flow-step"><strong>4. Отметка</strong>оставить статус наличия</div>
+            <div class="flow-step"><strong>5. Избранное</strong>сохранить станцию</div>
+            <div class="flow-step"><strong>6. Возврат</strong>быстрый доступ из Избранного</div>
+          </div>
+          <div class="row">
+            <button class="btn btn-primary" type="button" onclick="go('home')">Начать → Карта</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOME -->
+    <section class="screen" id="screen-home">
+      <div class="panel-h" style="padding:0 0 12px;border:0;">
+        <div>
+          <strong>Карта и список АЗС</strong>
+          <div class="muted">Фильтр по марке топлива</div>
+        </div>
+        <div class="chips" id="fuelChips">
+          <button class="chip active" data-fuel="all" type="button">Все</button>
+          <button class="chip" data-fuel="92" type="button">АИ-92</button>
+          <button class="chip" data-fuel="95" type="button">АИ-95</button>
+          <button class="chip" data-fuel="100" type="button">АИ-100</button>
+          <button class="chip" data-fuel="DT" type="button">ДТ</button>
+        </div>
+      </div>
+      <div class="layout">
+        <div class="panel">
+          <div class="panel-h"><strong>Карта Свердловской области</strong></div>
+          <div class="map" id="mapArea">
+            <div class="map-grid"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><strong>Список АЗС</strong><span class="muted" id="countLabel">3 станции</span></div>
+          <div class="panel-b"><div class="list" id="stationList"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="screen" id="screen-details">
+      <div class="detail-grid">
+        <div class="panel">
+          <div class="panel-h">
+            <div>
+              <strong id="detailTitle">Газпромнефть · Екатеринбург</strong>
+              <div class="muted" id="detailAddr">ул. Малышева, 36 · 56.838°, 60.597°</div>
+            </div>
+            <button class="btn btn-ghost" type="button" onclick="go('home')">← Назад</button>
+          </div>
+          <div class="panel-b">
+            <div class="row" style="margin-bottom:12px;">
+              <span class="status ok" id="detailStatus">есть · АИ-95 · сегодня 14:20</span>
+            </div>
+            <p class="muted">Название, адрес, координаты и последняя отметка о наличии топлива.</p>
+            <div class="row" style="margin-top:14px;">
+              <button class="btn btn-primary" type="button" id="favBtn" onclick="toggleFavorite()">☆ В избранное</button>
+              <button class="btn" type="button" onclick="go('favorites')">Открыть избранное</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-h"><strong>Добавить отметку</strong></div>
+          <div class="panel-b">
+            <div class="form">
+              <label class="muted">Марка топлива
+                <select id="markFuel">
+                  <option>АИ-92</option>
+                  <option selected>АИ-95</option>
+                  <option>АИ-100</option>
+                  <option>ДТ</option>
+                </select>
+              </label>
+              <label class="muted">Статус наличия
+                <select id="markStatus">
+                  <option value="ok">есть</option>
+                  <option value="low">мало</option>
+                  <option value="none">нет</option>
+                  <option value="queue">очередь</option>
+                </select>
+              </label>
+              <button class="btn btn-primary" type="button" onclick="saveMark()">Сохранить отметку</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAVORITES -->
+    <section class="screen" id="screen-favorites">
+      <div class="panel">
+        <div class="panel-h">
+          <div>
+            <strong>Избранное</strong>
+            <div class="muted">Сохранено в этом браузере</div>
+          </div>
+          <button class="btn btn-ghost" type="button" onclick="go('home')">← К карте</button>
+        </div>
+        <div class="panel-b">
+          <div class="list" id="favList"></div>
+          <div class="state-box hidden" id="favEmpty">
+            <div style="font-size:28px;">☆</div>
+            <strong style="color:var(--text);">Пока нет избранных АЗС</strong>
+            <div>Откройте карточку станции и нажмите «В избранное».</div>
+            <button class="btn btn-primary" type="button" onclick="go('home')">К карте</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMPTY -->
+    <section class="screen" id="screen-empty">
+      <div class="panel">
+        <div class="panel-h"><strong>Нет данных</strong></div>
+        <div class="state-box">
+          <div style="font-size:34px;">⛽</div>
+          <strong style="color:var(--text);">АЗС не найдены по фильтру</strong>
+          <div>По выбранной марке топлива станций нет. Сбросьте фильтр или измените область карты.</div>
+          <div class="row" style="justify-content:center;">
+            <button class="btn btn-primary" type="button" onclick="resetFilters(); go('home')">Сбросить фильтр</button>
+            <button class="btn" type="button" onclick="go('home')">Вернуться</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ERROR -->
+    <section class="screen" id="screen-error">
+      <div class="panel">
+        <div class="panel-h"><strong>Ошибка загрузки</strong></div>
+        <div class="state-box">
+          <div style="font-size:34px;">⚠️</div>
+          <strong style="color:#ffb4b8;">Не удалось загрузить АЗС</strong>
+          <div>Запрос к OpenStreetMap завершился ошибкой. Проверьте сеть и повторите попытку.</div>
+          <div class="row" style="justify-content:center;">
+            <button class="btn btn-primary" type="button" onclick="go('loading')">Повторить</button>
+            <button class="btn btn-danger" type="button" onclick="go('home')">Показать сохранённые данные</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="screen" id="screen-loading">
+      <div class="panel">
+        <div class="panel-h"><strong>Загрузка</strong></div>
+        <div class="state-box">
+          <div class="spinner"></div>
+          <strong style="color:var(--text);">Загружаем АЗС Свердловской области…</strong>
+          <button class="btn" type="button" onclick="go('home')">К карте</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOBILE -->
+    <section class="screen" id="screen-mobile">
+      <div class="panel-h" style="border:0;padding:0 0 12px;">
+        <div>
+          <strong>Мобильный экран</strong>
+          <div class="muted">Фильтры, карта и список</div>
+        </div>
+      </div>
+      <div class="mobile-frame">
+        <div style="padding:12px;display:flex;justify-content:space-between;align-items:center;">
+          <strong>FuelSearch66</strong>
+        </div>
+        <div class="chips" style="padding:0 12px 10px;" id="mobileChips">
+          <button class="chip active" data-fuel="95" type="button">АИ-95</button>
+          <button class="chip" data-fuel="92" type="button">АИ-92</button>
+          <button class="chip" data-fuel="DT" type="button">ДТ</button>
+        </div>
+        <div class="map" id="mobileMap"><div class="map-grid"></div></div>
+        <div class="panel-b">
+          <div class="list" id="mobileList"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const FUEL_NAME = { "92": "АИ-92", "95": "АИ-95", "100": "АИ-100", DT: "ДТ" };
+    const STATUS_NAME = { ok: "есть", low: "мало", none: "нет", queue: "очередь" };
+
+    const stations = [
+      {
+        id: 1, name: "Газпромнефть", addr: "ул. Малышева, 36, Екатеринбург", x: 28, y: 38,
+        marks: { "92": { status: "ok", time: "сегодня 12:10" }, "95": { status: "ok", time: "сегодня 14:20" } }
+      },
+      {
+        id: 2, name: "Лукойл", addr: "пр. Космонавтов, 14, Екатеринбург", x: 58, y: 52,
+        marks: { "92": { status: "low", time: "сегодня 13:05" }, "95": { status: "ok", time: "сегодня 11:40" }, DT: { status: "ok", time: "сегодня 10:00" } }
+      },
+      {
+        id: 3, name: "Татнефть", addr: "ул. 8 Марта, 150, Екатеринбург", x: 44, y: 68,
+        marks: { "95": { status: "queue", time: "вчера 19:40" } }
+      },
+      {
+        id: 4, name: "Башнефть", addr: "Сибирский тракт, 12 км", x: 72, y: 30,
+        marks: { DT: { status: "none", time: "сегодня 09:10" }, "92": { status: "ok", time: "сегодня 08:30" } }
+      }
+    ];
+
+    let filter = "all";
+    let current = stations[0];
+    let favorites = new Set();
+
+    function fuelsOf(s) { return Object.keys(s.marks); }
+
+    function markFor(s, fuelKey) {
+      if (fuelKey && fuelKey !== "all" && s.marks[fuelKey]) return { key: fuelKey, ...s.marks[fuelKey] };
+      const firstKey = fuelsOf(s)[0];
+      return { key: firstKey, ...s.marks[firstKey] };
+    }
+
+    function labelOf(s, fuelKey) {
+      const m = markFor(s, fuelKey);
+      return STATUS_NAME[m.status] + " · " + FUEL_NAME[m.key] + " · " + m.time;
+    }
+
+    function filteredStations() {
+      if (filter === "all") return stations.slice();
+      return stations.filter(s => !!s.marks[filter]);
+    }
+
+    function go(name) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById("screen-" + name).classList.add("active");
+      document.querySelectorAll("#mainNav button").forEach(b => {
+        b.classList.toggle("active", b.dataset.screen === name);
+      });
+      if (name === "home") renderHome();
+      if (name === "details") renderDetails();
+      if (name === "favorites") renderFavorites();
+      if (name === "mobile") renderMobile();
+      if (name === "loading") setTimeout(() => go("home"), 1600);
+    }
+
+    function renderStationCards(targetId, items, fuelKey) {
+      const list = document.getElementById(targetId);
+      list.innerHTML = items.map(s => {
+        const m = markFor(s, fuelKey);
+        return `<div class="station-card" onclick="openStation(${s.id})">
+          <h3>${s.name}</h3>
+          <div class="muted">${s.addr}</div>
+          <div style="margin-top:6px;"><span class="status ${m.status}">${labelOf(s, fuelKey)}</span></div>
+        </div>`;
+      }).join("");
+    }
+
+    function renderPins(mapId, items, fuelKey) {
+      const map = document.getElementById(mapId);
+      map.querySelectorAll(".pin").forEach(p => p.remove());
+      items.forEach(s => {
+        const m = markFor(s, fuelKey);
+        const pin = document.createElement("div");
+        pin.className = "pin " + m.status;
+        pin.style.left = s.x + "%";
+        pin.style.top = s.y + "%";
+        pin.title = s.name + " · " + FUEL_NAME[m.key];
+        pin.onclick = () => openStation(s.id);
+        map.appendChild(pin);
+      });
+    }
+
+    function renderHome() {
+      const items = filteredStations();
+      const word = items.length === 1 ? "станция" : "станций";
+      document.getElementById("countLabel").textContent = items.length + " " + word;
+      if (!items.length) { go("empty"); return; }
+      renderStationCards("stationList", items, filter);
+      renderPins("mapArea", items, filter);
+    }
+
+    function renderMobile() {
+      const fuel = "95";
+      const items = stations.filter(s => !!s.marks[fuel]);
+      renderStationCards("mobileList", items, fuel);
+      renderPins("mobileMap", items, fuel);
+    }
+
+    function openStation(id) {
+      current = stations.find(s => s.id === id) || stations[0];
+      go("details");
+    }
+
+    function renderDetails() {
+      document.getElementById("detailTitle").textContent = current.name;
+      document.getElementById("detailAddr").textContent = current.addr;
+      const fuelKey = filter !== "all" && current.marks[filter] ? filter : fuelsOf(current)[0];
+      const m = markFor(current, fuelKey);
+      const st = document.getElementById("detailStatus");
+      st.className = "status " + m.status;
+      st.textContent = labelOf(current, fuelKey);
+      const sel = document.getElementById("markFuel");
+      const wanted = FUEL_NAME[fuelKey];
+      [...sel.options].forEach(o => { o.selected = o.value === wanted; });
+      document.getElementById("favBtn").textContent = favorites.has(current.id) ? "★ В избранном" : "☆ В избранное";
+    }
+
+    function toggleFavorite() {
+      if (favorites.has(current.id)) favorites.delete(current.id);
+      else favorites.add(current.id);
+      renderDetails();
+      showToast(favorites.has(current.id) ? "АЗС добавлена в избранное" : "АЗС удалена из избранного");
+    }
+
+    function saveMark() {
+      const fuelLabel = document.getElementById("markFuel").value;
+      const status = document.getElementById("markStatus").value;
+      const key = Object.keys(FUEL_NAME).find(k => FUEL_NAME[k] === fuelLabel);
+      current.marks[key] = { status, time: "сейчас" };
+      if (filter === "all" || filter === key) filter = key;
+      renderDetails();
+      showToast("Отметка сохранена: " + STATUS_NAME[status] + " · " + fuelLabel);
+    }
+
+    function renderFavorites() {
+      const list = document.getElementById("favList");
+      const empty = document.getElementById("favEmpty");
+      const items = stations.filter(s => favorites.has(s.id));
+      if (!items.length) {
+        list.innerHTML = "";
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+      renderStationCards("favList", items, filter);
+    }
+
+    function resetFilters() {
+      filter = "all";
+      document.querySelectorAll("#fuelChips .chip").forEach(c => c.classList.toggle("active", c.dataset.fuel === "all"));
+    }
+
+    function showToast(text) {
+      const t = document.getElementById("toast");
+      t.textContent = text;
+      t.style.display = "block";
+      setTimeout(() => t.style.display = "none", 1800);
+    }
+
+    document.querySelectorAll("#mainNav button").forEach(btn => {
+      btn.addEventListener("click", () => go(btn.dataset.screen));
+    });
+    document.querySelectorAll("#fuelChips .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll("#fuelChips .chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        filter = chip.dataset.fuel;
+        const items = filteredStations();
+        if (!items.length) go("empty");
+        else { go("home"); renderHome(); }
+      });
+    });
+
+    renderHome();
+  </script>
+</body>
+</html>
