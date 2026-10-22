@@ -56,3 +56,10 @@ a{color:var(--color-accent)}
 .btn-secondary{background:#fff;color:var(--color-ink);border-color:var(--color-border)}
 .form-actions{display:flex;flex-wrap:wrap;gap:.55rem}
 .marks-list{list-style:none;margin:0 0 1rem;padding:0;display:grid;gap:.45rem}
+
+.mark-form fieldset{margin:.75rem 0 0;padding:.9rem 1rem 1rem;border:1px solid var(--color-border);border-radius:8px;background:#f7fafb}
+.form-field{display:grid;gap:.3rem;margin:0 0 .75rem}
+.form-field label{font-weight:600;font-size:.9rem}
+.form-field select{font:inherit;padding:.5rem .65rem;border:1px solid var(--color-border);border-radius:8px;background:#fff}
+.form-error{color:#b42318;font-weight:600}
+.form-success{color:#1f8a4c;font-weight:600}
