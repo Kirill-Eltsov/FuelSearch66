@@ -68,3 +68,10 @@ a{color:var(--color-accent)}
 .state-message--error{border-color:#f0b4b4;background:#fff5f5}
 .state-message--loading{border-color:#b7d8d4;background:#f2fbf9}
 .state-message--empty{border-style:dashed}
+
+.about-block{margin-bottom:1.2rem;padding:1.1rem 1.2rem;border:1px solid var(--color-border);border-radius:var(--radius);border-left:4px solid var(--color-accent);background:linear-gradient(180deg,#fff 0%,#f3f8f7 100%)}
+.about-block p{color:var(--color-muted);max-width:70ch}
+.site-footer{border-top:1px solid var(--color-border);background:var(--color-header);color:#d7e2ec;padding:1.15rem 0;font-size:.95rem}
+.site-footer .container{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem}
+.site-footer p{margin:0}
+.site-footer a{color:#9fe3d8;text-decoration:none;font-weight:650}

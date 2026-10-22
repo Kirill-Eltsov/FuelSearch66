@@ -1,11 +1,11 @@
-﻿import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Header from "./components/Header.jsx";
-import { StationsProvider } from "./context/StationsContext.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import StationDetailsPage from "./pages/StationDetailsPage.jsx";
-import FavoritesPage from "./pages/FavoritesPage.jsx";
-import AboutPage from "./pages/AboutPage.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import Header from './components/Header.jsx';
+import { StationsProvider } from './context/StationsContext.jsx';
+import HomePage from './pages/HomePage.jsx';
+import StationDetailsPage from './pages/StationDetailsPage.jsx';
+import FavoritesPage from './pages/FavoritesPage.jsx';
+import AboutPage from './pages/AboutPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export default function App() {
   return (
@@ -22,6 +22,14 @@ export default function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
+        <footer className="site-footer">
+          <div className="container">
+            <p>FuelSearch66 · Свердловская область · данные OSM</p>
+            <p>
+              <a href="#main">Наверх</a>
+            </p>
+          </div>
+        </footer>
       </StationsProvider>
     </BrowserRouter>
   );
