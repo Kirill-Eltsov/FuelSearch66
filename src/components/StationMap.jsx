@@ -10,6 +10,12 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+// Remove Ukraine flag from Leaflet attribution prefix
+L.Control.Attribution.mergeOptions({
+  prefix:
+    '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>',
+});
+
 const CENTER = [56.8389, 60.6057];
 const MAX_MARKERS = 250;
 

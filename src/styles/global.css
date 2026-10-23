@@ -301,6 +301,16 @@ p {
   z-index: 1;
 }
 
+/* Extra guard: hide Leaflet attribution flag if present */
+.leaflet-control-attribution .leaflet-attribution-flag,
+.leaflet-attribution-flag {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
 .map-hint {
   margin: 0.55rem 0 0;
   font-size: 0.88rem;
